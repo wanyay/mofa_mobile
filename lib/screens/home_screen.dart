@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mofa_mobile/screens/app_log.dart';
-import 'package:mofa_mobile/screens/notray_history_screen.dart';
+import 'package:mofa_mobile/screens/make_notary.dart';
+import 'package:mofa_mobile/screens/notary_history_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,15 +15,16 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 40.0),
             const AppLogo(),
             const SizedBox(height: 24.0),
             _buildProfileCard(context),
             const SizedBox(height: 24.0),
-            _buildNotrayHistory1(),
+            _buildNotaryHistory1(context),
             const SizedBox(height: 24.0),
-            _buildNotrayHistory2(),
+            _buildNotaryHistory2(context),
             const SizedBox(height: 24.0),
-            _buildNotrayHistory3(),
+            _buildNotaryHistory3(context),
           ],
         ),
       ),
@@ -67,24 +69,24 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NotrayHistoryScreen(),
+                      builder: (context) => NotaryHistoryScreen(),
                     ),
                   ),
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4727A0),
                   padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                    horizontal: 50.0,
+                    vertical: 15.0,
+                    horizontal: 15.0,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
                 child: const Text(
-                  'လျှောက်ထားခဲ့သည့် Notray များ',
+                  'လျှောက်ထားခဲ့သည့် Notary များ',
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -97,7 +99,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNotrayHistory1() {
+  Widget _buildNotaryHistory1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 53, 38, 65),
@@ -110,21 +112,26 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: Row(
         children: [
           const SizedBox(width: 25),
           Expanded(
             child: const Text(
-              'တက္ကသိုလ်ဝင်တန်း အောင်လက်မှတ်\nလျှောက်ထားခြင်း',
-              style: TextStyle(fontSize: 15, color: Colors.white),
+              'တက္ကသိုလ်ဝင်တန်းအောင်လက်မှတ် လျှောက်ထားခြင်း',
+              style: TextStyle(fontSize: 14, color: Colors.white),
             ),
           ),
           ElevatedButton(
-            onPressed: () => const {},
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MakeNotary()),
+              ),
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 138, 86, 172),
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -147,7 +154,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNotrayHistory2() {
+  Widget _buildNotaryHistory2(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 178, 85, 252),
@@ -160,21 +167,26 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: Row(
         children: [
           const SizedBox(width: 25),
           Expanded(
             child: const Text(
-              'xxx xxxx xxxx xxxx xxx xxလက်မှတ်\nလျှောက်ထားခြင်း',
+              'xxx xxxx xxxx xxxx xxx လက်မှတ် လျှောက်ထားခြင်း',
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ),
           ElevatedButton(
-            onPressed: () => const {},
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MakeNotary()),
+              ),
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 113, 3, 175),
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -197,7 +209,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNotrayHistory3() {
+  Widget _buildNotaryHistory3(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 57, 53, 172),
@@ -210,21 +222,26 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: Row(
         children: [
           const SizedBox(width: 25),
           Expanded(
             child: const Text(
-              'xxx xxxx xxxx xxxx xxx xxလက်မှတ်\nလျှောက်ထားခြင်း',
+              'xxx xxxx xxxx xxxx xxx လက်မှတ် လျှောက်ထားခြင်း',
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ),
           ElevatedButton(
-            onPressed: () => const {},
+            onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MakeNotary()),
+              ),
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 68, 112, 255),
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),

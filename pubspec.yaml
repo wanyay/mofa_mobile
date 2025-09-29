@@ -7,13 +7,14 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.2
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
