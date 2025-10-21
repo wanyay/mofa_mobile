@@ -106,127 +106,129 @@ class _BachelorCertificateFormState extends State<BachelorCertificateForm> {
                 );
               }
             });
-            return Column(
-              children: [
-                Text(
-                  pricing.name,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: primaryTextColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    height: 1.5, // Line height
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(
+                    pricing.name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: primaryTextColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      height: 1.5, // Line height
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                // The main details card
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 25,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 5,
-                        blurRadius: 15,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      InputTextRow(
-                        label: 'ခုံနံပါတ်',
-                        hintText: 'ခုံနံပါတ် ထည့်ပါ',
-                        controller: _rollNoController,
-                      ),
-                      InputTextRow(
-                        label: 'ခုနှစ်',
-                        hintText: 'ခုနှစ် ထည့်ပါ',
-                        controller: _yearController,
-                        keyboardType: TextInputType.number,
-                      ),
-                      InputTextRow(
-                        label: 'ဘွဲ့ အမည်',
-                        hintText: 'ဘွဲ့ အမည် ထည့်ပါ',
-                        controller: _degreeController,
-                      ),
-                      DropdownRow<University>(
-                        label: 'အောင်မြင်သည့် တက္ကသိုလ်',
-                        hintText: 'တက္ကသိုလ်အားရွေးချယ်ပါ',
-                        items: universityProvider.universities.toList(),
-                        selectedValue: selectedPassUniversity,
-                        onChanged: (University? university) {
-                          setState(() {
-                            selectedPassUniversity = university;
-                          });
-                        },
-                        getLabel: (University university) => university.name,
-                      ),
-                      DropdownRow<Township>(
-                        label: 'ထုတ်ယူမည့် မြို့နယ်',
-                        hintText: 'မြို့နယ်အားရွေးချယ်ပါ',
-                        items: townshipProvider.townships.toList(),
-                        selectedValue: selectedGetTownship,
-                        onChanged: (Township? township) {
-                          setState(() {
-                            selectedGetTownship = township;
-                          });
-                        },
-                        getLabel: (Township township) => township.name,
-                      ),
-                      InfoRow(
-                        label: 'ကျသင့်ငွေ',
-                        value: ' ${pricing.price} ကျပ်',
-                        isLast: true,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // The confirmation button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final Map<String, dynamic> data = {
-                        "rollNo": _rollNoController.text,
-                        "year": _yearController.text,
-                        "degree": _degreeController.text,
-                        "passUniversity": selectedPassUniversity,
-                        "getTownship": selectedGetTownship,
-                        "pricing": pricing,
-                      };
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentScreen(formData: data),
+                  const SizedBox(height: 20),
+                  // The main details card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 25,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 5,
+                          blurRadius: 15,
+                          offset: const Offset(0, 3),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryPurple,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
+                      ],
                     ),
-                    child: const Text(
-                      'လျှောက်ထားမည်',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    child: Column(
+                      children: [
+                        InputTextRow(
+                          label: 'ခုံနံပါတ်',
+                          hintText: 'ခုံနံပါတ် ထည့်ပါ',
+                          controller: _rollNoController,
+                        ),
+                        InputTextRow(
+                          label: 'ခုနှစ်',
+                          hintText: 'ခုနှစ် ထည့်ပါ',
+                          controller: _yearController,
+                          keyboardType: TextInputType.number,
+                        ),
+                        InputTextRow(
+                          label: 'ဘွဲ့ အမည်',
+                          hintText: 'ဘွဲ့ အမည် ထည့်ပါ',
+                          controller: _degreeController,
+                        ),
+                        DropdownRow<University>(
+                          label: 'အောင်မြင်သည့် တက္ကသိုလ်',
+                          hintText: 'တက္ကသိုလ်အားရွေးချယ်ပါ',
+                          items: universityProvider.universities.toList(),
+                          selectedValue: selectedPassUniversity,
+                          onChanged: (University? university) {
+                            setState(() {
+                              selectedPassUniversity = university;
+                            });
+                          },
+                          getLabel: (University university) => university.name,
+                        ),
+                        DropdownRow<Township>(
+                          label: 'ထုတ်ယူမည့် မြို့နယ်',
+                          hintText: 'မြို့နယ်အားရွေးချယ်ပါ',
+                          items: townshipProvider.townships.toList(),
+                          selectedValue: selectedGetTownship,
+                          onChanged: (Township? township) {
+                            setState(() {
+                              selectedGetTownship = township;
+                            });
+                          },
+                          getLabel: (Township township) => township.name,
+                        ),
+                        InfoRow(
+                          label: 'ကျသင့်ငွေ',
+                          value: ' ${pricing.price} ကျပ်',
+                          isLast: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // The confirmation button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final Map<String, dynamic> data = {
+                          "rollNo": _rollNoController.text,
+                          "year": _yearController.text,
+                          "degree": _degreeController.text,
+                          "passUniversity": selectedPassUniversity,
+                          "getTownship": selectedGetTownship,
+                          "pricing": pricing,
+                        };
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaymentScreen(formData: data),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryPurple,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'လျှောက်ထားမည်',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                  const SizedBox(height: 20),
+                ],
+              ),
             );
           },
         ),

@@ -25,7 +25,7 @@ class DropdownRow<T> extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Row(
             children: [
               Text(
@@ -41,7 +41,7 @@ class DropdownRow<T> extends StatelessWidget {
                       value: item,
                       child: Text(
                         getLabel(item),
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.visible,
                       ),
                     );
                   }).toList(),

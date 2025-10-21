@@ -21,7 +21,7 @@ class InputTextRow extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0), // Reduced padding
+          padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: Row(
             children: [
               Text(

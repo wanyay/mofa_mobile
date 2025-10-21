@@ -26,13 +26,6 @@ class _NotaryDetailState extends State<NotaryDetail> {
     });
   }
 
-  @override
-  void dispose() {
-    final notaryProvider = Provider.of<NotaryProvider>(context, listen: false);
-    notaryProvider.resetAll();
-    super.dispose();
-  }
-
   Future<void> _loadNotaryDetail() async {
     final notaryProvider = Provider.of<NotaryProvider>(context, listen: false);
     switch (widget.history.notaryID) {
@@ -271,6 +264,7 @@ class _NotaryDetailState extends State<NotaryDetail> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),

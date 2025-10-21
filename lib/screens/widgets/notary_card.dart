@@ -19,7 +19,7 @@ class NotaryCard extends StatelessWidget {
 
   String getStatus() {
     if (history.isHardCopied) {
-      return 'ထုပ်ယူပြီး';
+      return 'ထုတ်ယူပြီး';
     }
     return 'ဆောင်ရွက်နေဆဲ';
   }
