@@ -1,8 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:mofa_mobile/models/notary_history.dart';
+import 'package:mofa_mobile/providers/notary_provider.dart';
+import 'package:mofa_mobile/util/auth_manager.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class NotaryDetail extends StatelessWidget {
-  const NotaryDetail({super.key});
+class NotaryDetail extends StatefulWidget {
+  final NotaryHistory history;
+
+  const NotaryDetail({super.key, required this.history});
+
+  @override
+  State<NotaryDetail> createState() => _NotaryDetailState();
+}
+
+class _NotaryDetailState extends State<NotaryDetail> {
+  final String phone = AuthManager.getPhone();
+  final String name = AuthManager.getName();
+  final String nrc = AuthManager.getNRC();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadNotaryDetail();
+    });
+  }
+
+  @override
+  void dispose() {
+    final notaryProvider = Provider.of<NotaryProvider>(context, listen: false);
+    notaryProvider.resetAll();
+    super.dispose();
+  }
+
+  Future<void> _loadNotaryDetail() async {
+    final notaryProvider = Provider.of<NotaryProvider>(context, listen: false);
+    switch (widget.history.notaryID) {
+      case 1:
+        await notaryProvider.getMatrixMarkDetail(widget.history.ticketID);
+        break;
+      case 2:
+        await notaryProvider.getMatrixPassDetail(widget.history.ticketID);
+        break;
+      case 3:
+        await notaryProvider.getBachelorCertificateDetail(
+          widget.history.ticketID,
+        );
+        break;
+      default:
+        notaryProvider.setError('Unknown notary type');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,105 +83,199 @@ class NotaryDetail extends StatelessWidget {
         ),
         leadingWidth: 80, // Adjust width to fit the icon and text
       ),
-      body: SingleChildScrollView(
-        // Use SingleChildScrollView to prevent overflow on smaller screens
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // --- Title Text ---
-              const Text(
-                'တက္ကသိုလ်ဝင်တန်း အောင်လက်မှတ်\nလျှောက်ထားခြင်း',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: primaryTextColor,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  height: 1.5, // Line height
+      body: Consumer<NotaryProvider>(
+        builder: (context, notaryProvider, child) {
+          if (notaryProvider.status == NotaryStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (notaryProvider.status == NotaryStatus.failure) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Error: ${notaryProvider.error}',
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 32),
+            );
+          }
 
-              // --- QR Code ---
-              // This uses the qr_flutter package.
-              // Add `qr_flutter: ^4.1.0` to your pubspec.yaml
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.purple.withOpacity(0.1),
-                      spreadRadius: 2,
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: QrImageView(
-                  data:
-                      'Phone No: 09691216112\nName: Mg Kyaw Kyaw Naing\nNRC No: ၁၂/မမန(နိုင်)၀၀၀၀၂၅\nReference No: 54878885',
-                  version: QrVersions.auto,
-                  size: 200.0,
-                ),
-              ),
-              const SizedBox(height: 32),
+          dynamic notary;
+          if (notaryProvider.status == NotaryStatus.success) {
+            switch (widget.history.notaryID) {
+              case 1:
+                notary = notaryProvider.matrixMarkDetail;
+                break;
+              case 2:
+                notary = notaryProvider.matrixPassDetail;
+                break;
+              case 3:
+                notary = notaryProvider.bachelorCertificateDetail;
+                break;
+              default:
+                return const Center(child: Text('Error: Unknown notary type'));
+            }
+          }
 
-              // --- Information Card ---
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(24.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.purple.withOpacity(0.08),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // A reusable widget for each information row
-                    _buildInfoRow(
-                      'Phone No:',
-                      '09691216112',
-                      labelColor,
-                      secondaryTextColor,
-                    ),
-                    const Divider(height: 30),
-                    _buildInfoRow(
-                      'Name:',
-                      'Mg Kyaw Kyaw Naing',
-                      labelColor,
-                      secondaryTextColor,
-                    ),
-                    const Divider(height: 30),
-                    _buildInfoRow(
-                      'NRC No:',
-                      '၁၂/မမန(နိုင်)၀၀၀၀၂၅',
-                      labelColor,
-                      secondaryTextColor,
-                    ),
-                    const Divider(height: 30),
-                    _buildInfoRow(
-                      'Reference No:',
-                      '54878885',
-                      labelColor,
-                      secondaryTextColor,
-                    ),
-                  ],
-                ),
+          if (notary == null) {
+            return const Center(
+              child: Text('Error: Could not load notary details.'),
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 16.0,
               ),
-            ],
-          ),
-        ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // --- Title Text ---
+                  Text(
+                    widget.history.notaryName,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: primaryTextColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      height: 1.5, // Line height
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // --- QR Code ---
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.purple.withOpacity(0.1),
+                          spreadRadius: 2,
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: QrImageView(
+                      data: widget.history.ticketID,
+                      version: QrVersions.auto,
+                      size: 200.0,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // --- Information Card ---
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.purple.withOpacity(0.08),
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoRow(
+                          'Phone No:',
+                          phone,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                        const Divider(height: 30),
+                        _buildInfoRow(
+                          'Name:',
+                          name,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                        const Divider(height: 30),
+                        _buildInfoRow(
+                          'မှတ်ပုံတင်အမှတ်:',
+                          nrc,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                        const Divider(height: 30),
+                        _buildInfoRow(
+                          'Reference No:',
+                          widget.history.ticketID,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                        const Divider(height: 30),
+                        _buildInfoRow(
+                          'ခုံနံပါတ်:',
+                          // This is now safe to access
+                          notary.rollNo,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                        const Divider(height: 30),
+                        _buildInfoRow(
+                          'ခုနှစ်:',
+                          // This is now safe to access
+                          notary.year,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                        const Divider(height: 30),
+                        if (widget.history.notaryID == 3)
+                          _buildInfoRow(
+                            'ဘွဲ့ အမည်:',
+                            notary.degree,
+                            labelColor,
+                            secondaryTextColor,
+                          )
+                        else
+                          _buildInfoRow(
+                            'ကျောင်းအမည်:',
+                            notary.school,
+                            labelColor,
+                            secondaryTextColor,
+                          ),
+                        const Divider(height: 30),
+                        if (widget.history.notaryID == 3)
+                          _buildInfoRow(
+                            'အောင်မြင်သည့် တက္ကသိုလ်:',
+                            notary.passUniversity.name,
+                            labelColor,
+                            secondaryTextColor,
+                          )
+                        else
+                          _buildInfoRow(
+                            'အောင်မြင်သည့် မြို့နယ်:',
+                            notary.passTownship.name,
+                            labelColor,
+                            secondaryTextColor,
+                          ),
+                        const Divider(height: 30),
+                        _buildInfoRow(
+                          'ထုတ်ယူသည့် မြို့နယ်:',
+                          notary.getTownship.name,
+                          labelColor,
+                          secondaryTextColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
