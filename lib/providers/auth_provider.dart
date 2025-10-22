@@ -100,21 +100,31 @@ class AuthNotifier with ChangeNotifier {
   }
 
   void _setStatus(AuthStatus status) {
-    _status = status;
-    if (status != AuthStatus.failure) {
-      _error = '';
+    if (_status != status) {
+      _status = status;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   void _setError(String error) {
-    _error = error;
-    _status = AuthStatus.failure;
-    notifyListeners();
+    if (_error != error) {
+      _error = error;
+      _status = AuthStatus.failure;
+      notifyListeners();
+
+      Future.delayed(const Duration(microseconds: 3000), () {
+        if (_status == AuthStatus.failure) {
+          resetStatus();
+        }
+      });
+    }
   }
 
   void resetStatus() {
-    _status = AuthStatus.initial;
-    _error = '';
+    if (_status != AuthStatus.initial || _error.isNotEmpty) {
+      _status = AuthStatus.initial;
+      _error = '';
+      notifyListeners();
+    }
   }
 }

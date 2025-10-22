@@ -84,7 +84,7 @@ class PaymentScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withAlpha(26),
                         spreadRadius: 5,
                         blurRadius: 15,
                         offset: const Offset(0, 3),
@@ -179,6 +179,7 @@ class PaymentScreen extends StatelessWidget {
                           );
                       }
                       if (notaryProvider.status == NotaryStatus.success) {
+                        // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('လျှောက်ထားမှု အောင်မြင်ပါသည်။'),
@@ -186,6 +187,7 @@ class PaymentScreen extends StatelessWidget {
                           ),
                         );
                         notaryProvider.resetAll();
+                        // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(context, '/home');
                       }
                     },

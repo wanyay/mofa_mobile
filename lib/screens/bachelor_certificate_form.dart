@@ -42,6 +42,7 @@ class _BachelorCertificateFormState extends State<BachelorCertificateForm> {
     await townshipProvider.fetchTownships();
 
     final universityProvider = Provider.of<UniversityProvider>(
+      // ignore: use_build_context_synchronously
       context,
       listen: false,
     );
@@ -131,7 +132,7 @@ class _BachelorCertificateFormState extends State<BachelorCertificateForm> {
                       borderRadius: BorderRadius.circular(30.0),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: Colors.grey.withAlpha(26),
                           spreadRadius: 5,
                           blurRadius: 15,
                           offset: const Offset(0, 3),

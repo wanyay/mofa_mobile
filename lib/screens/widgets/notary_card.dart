@@ -43,7 +43,7 @@ class NotaryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withAlpha(26),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -116,10 +116,7 @@ class NotaryCard extends StatelessWidget {
           width: 100, // Fixed width for labels
           child: Text(
             label,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.white.withAlpha(204), fontSize: 14),
           ),
         ),
         Expanded(

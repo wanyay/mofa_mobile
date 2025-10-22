@@ -147,7 +147,7 @@ class _NotaryDetailState extends State<NotaryDetail> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.purple.withOpacity(0.1),
+                          color: Colors.purple.withAlpha(26),
                           spreadRadius: 2,
                           blurRadius: 10,
                           offset: const Offset(0, 5),
@@ -171,7 +171,7 @@ class _NotaryDetailState extends State<NotaryDetail> {
                       borderRadius: BorderRadius.circular(25.0),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.purple.withOpacity(0.08),
+                          color: Colors.purple.withAlpha(21),
                           spreadRadius: 1,
                           blurRadius: 8,
                           offset: const Offset(0, 4),

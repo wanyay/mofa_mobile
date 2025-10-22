@@ -15,6 +15,23 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isPasswordObscured = true;
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  String? _validateInputs() {
+    final phone = _phoneController.text.trim();
+
+    if (phone.isEmpty) return 'ဖုန်းနံပါတ် ထည့်သွင်းပါ';
+    if (phone.startsWith('09')) {
+      return 'ဖုန်းနံပါတ်တွင် 09 ထည့်စရာမလိုပါ';
+    }
+    if (phone.length < 7) return 'ဖုန်းနံပါတ် ပြည့်စုံအောင် ထည့်သွင်းပါ';
+    if (_passwordController.text.isEmpty) return 'လျှို့ဝှက်နံပါတ် ထည့်သွင်းပါ';
+    if (_passwordController.text.length < 6) {
+      return 'လျှို့ဝှက်နံပါတ် အနည်းဆုံး ၆ လုံး ရှိရမည်';
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,15 +44,20 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             child: Consumer<AuthNotifier>(
               builder: (context, authProvider, child) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (authProvider.status == AuthStatus.success) {
+                if (authProvider.status == AuthStatus.success) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.pushReplacementNamed(context, '/home');
-                  } else if (authProvider.status == AuthStatus.failure) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(authProvider.error)));
-                  }
-                });
+                  });
+                } else if (authProvider.status == AuthStatus.failure) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(authProvider.error),
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
+                  });
+                }
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -121,8 +143,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (authProvider.status == AuthStatus.loading) {
                           return; // Prevent multiple submissions
                         }
+                        final validationError = _validateInputs();
+                        if (validationError != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(validationError)),
+                          );
+                          return;
+                        }
                         authProvider.login(
-                          _phoneController.text,
+                          '+959${_phoneController.text}',
                           _passwordController.text,
                         );
                       },

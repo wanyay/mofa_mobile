@@ -108,6 +108,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
   }
 
+  String? _validateInputs() {
+    if (_phoneController.text.isEmpty) return 'ဖုန်းနံပါတ် ထည့်သွင်းပါ';
+    if (_phoneController.text.startsWith('09')) {
+      return 'ဖုန်းနံပါတ်တွင် 09 ထည့်စရာမလိုပါ';
+    }
+    if (_nameController.text.isEmpty) return 'အသုံးပြုသူအမည် ထည့်သွင်းပါ';
+    if (_selectedNrcState == null ||
+        _selectedNrcTownship == null ||
+        _selectedNrcType == null ||
+        _nrcNumberController.text.isEmpty) {
+      return 'NRC နံပါတ် ပြည့်စုံစွာ ထည့်သွင်းပါ';
+    }
+    if (_passwordController.text.length < 6) {
+      return 'လျှို့ဝှက်နံပါတ် အနည်းဆုံး ၆ လုံး ရှိရမည်';
+    }
+    if (_passwordController.text != _retypePasswordController.text) {
+      return 'လျှို့ဝှက်နံပါတ် နှစ်ခု တူညီရမည်';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,6 +162,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     Future.delayed(const Duration(seconds: 1), () {
                       if (mounted) {
                         // Check if the widget is still in the tree
+                        // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(context, '/login');
                       }
                     });
@@ -148,6 +170,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(SnackBar(content: Text(authProvider.error)));
+                    authProvider.resetStatus();
                   }
                 });
                 return Column(
@@ -282,14 +305,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizedBox(height: 32.0),
                     ElevatedButton(
                       onPressed: () {
-                        if (authProvider.status == AuthStatus.loading) {
-                          return; // Prevent multiple submissions
+                        if (authProvider.status == AuthStatus.loading) return;
+
+                        final validationError = _validateInputs();
+                        if (validationError != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(validationError)),
+                          );
+                          return;
                         }
+
                         final fullNrc =
                             '$_selectedNrcState/$_selectedNrcTownship($_selectedNrcType)${_nrcNumberController.text}';
                         authProvider.register(
                           _nameController.text,
-                          _phoneController.text,
+                          '+959${_phoneController.text}',
                           fullNrc,
                           _passwordController.text,
                           _retypePasswordController.text,
